@@ -235,4 +235,42 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
+
+  // 6. Background Music (BGM) Controller
+  const bgm = document.getElementById('bgm');
+  const bgmToggle = document.getElementById('bgm-toggle');
+
+  if (bgm && bgmToggle) {
+    // Function to play BGM
+    const playBgm = () => {
+      bgm.play().then(() => {
+        bgmToggle.classList.add('playing');
+      }).catch(err => {
+        console.log('Autoplay blocked by browser policy. Waiting for user interaction.');
+      });
+    };
+
+    // Toggle button handler
+    bgmToggle.addEventListener('click', (e) => {
+      e.stopPropagation(); // Avoid triggering document-level first click handler
+      if (bgm.paused) {
+        bgm.play();
+        bgmToggle.classList.add('playing');
+      } else {
+        bgm.pause();
+        bgmToggle.classList.remove('playing');
+      }
+    });
+
+    // Autoplay BGM on first user interaction with the document (browser bypass)
+    const startAudioOnInteraction = () => {
+      playBgm();
+      // Remove event listeners once triggered
+      document.removeEventListener('click', startAudioOnInteraction);
+      document.removeEventListener('touchstart', startAudioOnInteraction);
+    };
+
+    document.addEventListener('click', startAudioOnInteraction);
+    document.addEventListener('touchstart', startAudioOnInteraction);
+  }
 });
