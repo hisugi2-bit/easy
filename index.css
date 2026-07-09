@@ -343,7 +343,7 @@ header.scrolled .mobile-menu-toggle span {
   position: relative;
   height: 100vh;
   min-height: 650px;
-  background-image: url('assets/hero_bg.png');
+  background-image: url('assets/hero_bg.png?v=2');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
