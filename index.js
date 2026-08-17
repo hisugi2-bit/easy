@@ -236,13 +236,50 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 6. Background Music (BGM) Controller
+  // 6. Background Music (BGM) Controller & YouTube Mutual Exclusion
   const bgm = document.getElementById('bgm');
   const bgmToggle = document.getElementById('bgm-toggle');
+  let ytPlayer = null;
+
+  // Load YouTube IFrame Player API dynamically
+  const tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  const firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+  // Define global ready handler for YT API
+  window.onYouTubeIframeAPIReady = function() {
+    ytPlayer = new YT.Player('ebs-youtube-player', {
+      events: {
+        'onStateChange': onPlayerStateChange
+      }
+    });
+  };
+
+  // Pause BGM when YouTube video starts playing
+  function onPlayerStateChange(event) {
+    // 1 represents YT.PlayerState.PLAYING
+    if (event.data === 1) {
+      if (bgm && !bgm.paused) {
+        bgm.pause();
+        if (bgmToggle) {
+          bgmToggle.classList.remove('playing');
+        }
+      }
+    }
+  }
+
+  // Check if YouTube video is playing
+  const isYoutubePlaying = () => {
+    return ytPlayer && typeof ytPlayer.getPlayerState === 'function' && ytPlayer.getPlayerState() === 1;
+  };
 
   if (bgm && bgmToggle) {
     // Function to play BGM
     const playBgm = () => {
+      if (isYoutubePlaying()) {
+        return; // Do not autoplay BGM if user is playing YouTube video
+      }
       bgm.play().then(() => {
         bgmToggle.classList.add('playing');
       }).catch(err => {
@@ -254,6 +291,10 @@ document.addEventListener('DOMContentLoaded', () => {
     bgmToggle.addEventListener('click', (e) => {
       e.stopPropagation(); // Avoid triggering document-level first click handler
       if (bgm.paused) {
+        // Pause YouTube video if it is currently playing
+        if (ytPlayer && typeof ytPlayer.pauseVideo === 'function') {
+          ytPlayer.pauseVideo();
+        }
         bgm.play();
         bgmToggle.classList.add('playing');
       } else {
