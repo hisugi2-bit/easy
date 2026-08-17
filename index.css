@@ -1341,12 +1341,16 @@ footer {
   }
 
   .ebs-card {
-    padding: 30px 20px 0 20px;
+    padding: 30px 16px 0 16px;
+    margin-left: -12px;
+    margin-right: -12px;
+    overflow: hidden;
   }
 
   .ebs-image-container {
     max-width: none;
-    margin: 0 -20px 0 -20px;
+    width: calc(100% + 32px);
+    margin: 0 -16px 0 -16px;
     border-radius: 0;
     box-shadow: none;
   }
