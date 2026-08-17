@@ -193,9 +193,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Setup Native SMS action
       // For cross-platform compatibility:
-      // iOS: sms:010-4687-0482;&body=text
-      // Android/Default: sms:010-4687-0482;?body=text
-      const recipient = '010-4687-0482';
+      // iOS: sms:010-3008-1914;&body=text
+      // Android/Default: sms:010-3008-1914;?body=text
+      const recipient = '010-3008-1914';
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
       const separator = isIOS ? '&' : '?';
       btnSendSms.href = `sms:${recipient}${separator}body=${encodeURIComponent(smsText)}`;
